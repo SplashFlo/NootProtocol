@@ -383,7 +383,7 @@ Func _server()
 			Global $aClientArray[4] = [$aSocket[0], $aSocket[1], $aData[1], $aData[2]] ;Erstelle ein Array mit den Daten die benötigt werden, um den Client etwas zurück zu senden
 			ConsoleWrite("Got Message: " & $aData[0] & @CRLF)
 			ConsoleWrite("Sending connection built" & @CRLF)
-			UDPSend($aClientArray, 1001 & @CRLF & @CRLF & @CRLF)
+			UDPSend($aClientArray, 1001)
 
 		EndIf
 
@@ -391,7 +391,7 @@ Func _server()
 		$readRaw = ConsoleRead(False, True)
 		Global $newReadLine = StringTrimRight($readRaw, 4)
 		If $newReadLine <> "" Then
-			UDPSend($aClientArray,1001)
+			;serverfunktion bald eingefügt
 		EndIf
 		Sleep(20)
 
