@@ -391,7 +391,7 @@ Func _server()
 		$readRaw = ConsoleRead(False, True)
 		Global $newReadLine = StringTrimRight($readRaw, 4)
 		If $newReadLine <> "" Then
-			_readConsoleServerView()
+			UDPSend($aClientArray,1001)
 		EndIf
 		Sleep(20)
 
