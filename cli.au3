@@ -12,7 +12,6 @@
 #include <WinAPIFiles.au3>
 #include <Process.au3>
 
-
 _readParameters()
 ;-------------------------------------------------------------------------------------
 ;	Deklaration von Variablen in einer Funktion und Lädt anschließend die CLI
@@ -128,6 +127,7 @@ Func _mainMenuCommands()
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
 	Global $cls = StringToBinary("cls")
+	Global $ftp = StringToBinary("ftp")
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -398,7 +398,6 @@ Func _server()
 
 	WEnd
 EndFunc
-
 
 #cs
 	;-------------------------------------------------------------------------------------
