@@ -172,7 +172,7 @@ Func _readConsoleUserView()
 	EndSwitch
 	ConsoleWrite("[UserView] ")
 
-
+EndFunc
 
 #cs
 	;-------------------------------------------------------------------------------------
