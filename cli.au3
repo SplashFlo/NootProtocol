@@ -11,7 +11,7 @@
 #include <String.au3>
 #include <WinAPIFiles.au3>
 #include <Process.au3>
-
+#include <FTPEx.au3>
 
 _readParameters()
 ;-------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ EndFunc
 	Autor: 			Florian Krismer
 	Sytax: 			_countDown()
 	Return Value:		-
-	Beschreibung: 	Final Countdown 10 Sekunden bevor shutdown
+	Beschreibung: 	Final Countdown 3 Sekunden bevor shutdown
 	-------------------------------------------------------------------------------------
 #ce
 Func _countDown()
@@ -475,3 +475,30 @@ Func _DeleteIniServer()
 
 EndFunc
 
+#cs
+	;-------------------------------------------------------------------------------------
+	Autor: 			Florian Krismer
+	Sytax: 			_getSoundFile()
+	Return Value:		-
+	Beschreibung: 	Downloaded die Noot Soundfile in das Scriptverzeichnis
+	-------------------------------------------------------------------------------------
+#ce
+func _getSoundFile()
+
+	ConsoleWrite("Starting download for Soundfile!" & @CRLF)
+	$ftpOpen = _FTP_OPEN("Soundfile")
+	$ftpConn = _FTP_Connect($ftpOpen, "46.228.199.85", "administrator", "!VSAdmin01!")
+
+	if @error Then
+		ConsoleWrite("Error while downloading soundfile!" & @CRLF)
+	Else
+		$ftpGet = _FTP_FileGet($ftpConn, "/noot/noot.mp3", @ScriptDir & "\noot.mp3")
+		if @error Then
+			ConsoleWrite("Error while downloading soundfile!" & @CRLF)
+		Else
+			ConsoleWrite("Download finished" & @CRLF)
+		EndIf
+	EndIf
+	sleep(5000)
+
+EndFunc
