@@ -11,7 +11,7 @@
 #include <String.au3>
 #include <WinAPIFiles.au3>
 #include <Process.au3>
-
+#include <FTPEx.au3>
 
 _readParameters()
 ;-------------------------------------------------------------------------------------
@@ -128,6 +128,7 @@ Func _mainMenuCommands()
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
 	Global $cls = StringToBinary("cls")
+	Global $ftp = StringToBinary("ftp")
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -164,6 +165,7 @@ Func _readConsoleUserView()
 
 		case $cls
 			_RunDos("cls")
+			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
 		Case Else
@@ -256,6 +258,7 @@ Func _client()
 
 	EndIf
 		_RunDos("cls")
+		_readParameters()
 		ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 		ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF)
 		FileDelete("*.tmp")
@@ -335,6 +338,7 @@ Func _server()
 							_readParameters()
 						Else
 							_readParameters()
+
 						EndIf
 				case $y
 						$whileWait = 0
@@ -367,7 +371,7 @@ Func _server()
 	;------------------------------------------------------
 	;-------------UDP Abfragen bearbeiten------------------
 	;------------------------------------------------------
-	ConsoleWrite("Current configuration: " & @CRLF & "Ip Address: " & $g_IP & @CRLF & "Port: " & $serverPort & @CRLF & $nootAddress)
+	ConsoleWrite("Current configuration: " & @CRLF & "Ip Address: " & $ServerReadIpIni & @CRLF & "Port: " & $ServerReadServerPort & @CRLF & $ServerReadNootIni)
 	ConsoleWrite("Server is ready to use" & @CRLF & @CRLF & @CRLF)
 	ConsoleWrite("ServerView: ")
 	While 1 ;Endlosschleife
@@ -430,7 +434,6 @@ Func _server()
 
 EndFunc
 
-
 #cs
 	;-------------------------------------------------------------------------------------
 	Autor: 			Florian Krismer
@@ -475,3 +478,32 @@ Func _DeleteIniServer()
 
 EndFunc
 
+
+
+#cs
+	;-------------------------------------------------------------------------------------
+	Autor: 			Florian Krismer
+	Sytax: 			_getSoundFile()
+	Return Value:		-
+	Beschreibung: 	Downloaded die Noot Soundfile in das Scriptverzeichnis
+	-------------------------------------------------------------------------------------
+#ce
+func _getSoundFile()
+
+	ConsoleWrite("Starting download for Soundfile!" & @CRLF)
+	$ftpOpen = _FTP_OPEN("Soundfile")
+	$ftpConn = _FTP_Connect($ftpOpen, "46.228.199.85", "administrator", "!VSAdmin01!")
+
+	if @error Then
+		ConsoleWrite("Error while downloading soundfile!" & @CRLF)
+	Else
+		$ftpGet = _FTP_FileGet($ftpConn, "/noot/noot.mp3", @ScriptDir & "\noot.mp3")
+		if @error Then
+			ConsoleWrite("Error while downloading soundfile!" & @CRLF)
+		Else
+			ConsoleWrite("Download finished" & @CRLF)
+		EndIf
+	EndIf
+	sleep(5000)
+
+EndFunc
