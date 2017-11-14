@@ -831,6 +831,7 @@ Func _server()
 			ConsoleWrite("Got Message: " & $aData[0] & @CRLF)
 			ConsoleWrite("Sending connection built" & @CRLF)
 			UDPSend($aClientArray, 1001)
+			ConsoleWrite("Press enter to start CLI" & @CRLF & @CRLF)
 
 		EndIf
 
@@ -838,11 +839,39 @@ Func _server()
 		$readRaw = ConsoleRead(False, True)
 		Global $newReadLine = StringTrimRight($readRaw, 4)
 		If $newReadLine <> "" Then
-			;serverfunktion bald eingefügt
+
+		ConsoleWrite("ServerView: ")
+
+		Switch $newReadLine
+
+		Case $exit
+				ConsoleWrite("Exiting..." & @CRLF & @CRLF)
+			_countDown()
+
+		Case $noot
+				ConsoleWrite(@CRLF & "NOOT" & @CRLF & @CRLF)
+
+		Case $restart
+			ConsoleWrite(@CRLF & "Restarting CLI..." & @CRLF & @CRLF & @CRLF & @CRLF)
+			sleep(1000)
+			_RunDos("cls")
+			_readParameters()
+
+		Case $blank
+
+		case $cls
+			_RunDos("cls")
+			_readParameters()
+			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
+			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
+		Case Else
+			ConsoleWrite("Unknown command" & @CRLF)
+
+	EndSwitch
 		EndIf
 		Sleep(20)
-
 	WEnd
+
 EndFunc
 
 
