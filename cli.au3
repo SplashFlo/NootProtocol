@@ -164,7 +164,6 @@ Func _readConsoleUserView()
 
 		case $cls
 			_RunDos("cls")
-			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
 		Case Else
@@ -370,6 +369,7 @@ Func _server()
 	;------------------------------------------------------
 	ConsoleWrite("Current configuration: " & @CRLF & "Ip Address: " & $g_IP & @CRLF & "Port: " & $serverPort & @CRLF & $nootAddress)
 	ConsoleWrite("Server is ready to use" & @CRLF & @CRLF & @CRLF)
+	ConsoleWrite("ServerView: ")
 	While 1 ;Endlosschleife
 
 		$aData = UDPRecv($aSocket, 64, 2) ;empfängt Daten von einem Client
@@ -384,7 +384,6 @@ Func _server()
 			ConsoleWrite("Got Message: " & $aData[0] & @CRLF)
 			ConsoleWrite("Sending connection built" & @CRLF)
 			UDPSend($aClientArray, 1001)
-			ConsoleWrite("Press enter to start CLI" & @CRLF & @CRLF)
 
 		EndIf
 
@@ -392,8 +391,6 @@ Func _server()
 		$readRaw = ConsoleRead(False, True)
 		Global $newReadLine = StringTrimRight($readRaw, 4)
 		If $newReadLine <> "" Then
-
-		ConsoleWrite("ServerView: ")
 
 		Switch $newReadLine
 
@@ -412,15 +409,21 @@ Func _server()
 
 		Case $blank
 
+		Case $help
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls" & @CRLF & @CRLF)
+
+		Case $helpShortCut
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls"& @CRLF & @CRLF)
+
 		case $cls
 			_RunDos("cls")
-			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
 		Case Else
 			ConsoleWrite("Unknown command" & @CRLF)
 
-	EndSwitch
+		EndSwitch
+		ConsoleWrite("ServerView: ")
 		EndIf
 		Sleep(20)
 	WEnd
