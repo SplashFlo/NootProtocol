@@ -128,6 +128,7 @@ Func _mainMenuCommands()
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
 	Global $cls = StringToBinary("cls")
+	Global $ftp = StringToBinary("ftp")
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -164,6 +165,7 @@ Func _readConsoleUserView()
 
 		case $cls
 			_RunDos("cls")
+			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
 		Case Else
@@ -179,7 +181,7 @@ EndFunc
 	Autor: 			Florian Krismer
 	Sytax: 			_countDown()
 	Return Value:		-
-	Beschreibung: 	Final Countdown 3 Sekunden bevor shutdown
+	Beschreibung: 	Final Countdown 10 Sekunden bevor shutdown
 	-------------------------------------------------------------------------------------
 #ce
 Func _countDown()
@@ -256,6 +258,7 @@ Func _client()
 
 	EndIf
 		_RunDos("cls")
+		_readParameters()
 		ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 		ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF)
 		FileDelete("*.tmp")
@@ -335,6 +338,7 @@ Func _server()
 							_readParameters()
 						Else
 							_readParameters()
+
 						EndIf
 				case $y
 						$whileWait = 0
@@ -367,7 +371,7 @@ Func _server()
 	;------------------------------------------------------
 	;-------------UDP Abfragen bearbeiten------------------
 	;------------------------------------------------------
-	ConsoleWrite("Current configuration: " & @CRLF & "Ip Address: " & $g_IP & @CRLF & "Port: " & $serverPort & @CRLF & $nootAddress)
+	ConsoleWrite("Current configuration: " & @CRLF & "Ip Address: " & $ServerReadIpIni & @CRLF & "Port: " & $ServerReadServerPort & @CRLF & $ServerReadNootIni)
 	ConsoleWrite("Server is ready to use" & @CRLF & @CRLF & @CRLF)
 	ConsoleWrite("ServerView: ")
 	While 1 ;Endlosschleife
@@ -430,7 +434,6 @@ Func _server()
 
 EndFunc
 
-
 #cs
 	;-------------------------------------------------------------------------------------
 	Autor: 			Florian Krismer
@@ -474,6 +477,8 @@ Func _DeleteIniServer()
 	Sleep (1000)
 
 EndFunc
+
+
 
 #cs
 	;-------------------------------------------------------------------------------------
