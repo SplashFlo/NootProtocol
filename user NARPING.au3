@@ -5,19 +5,19 @@ TCPStartup()
 
 HotKeySet("{Esc}", "_Close")
 
-$ip = @IPAddress1;could be your "real" ip address (whatismyip.com). you will need to port forward if you have a router
+$ip = @IPAddress1
 $port = 29200
 
-$connect = TCPConnect($ip, $port)
+$connect = UDPBind($ip, $port)
 If @error Then
     ToolTip("could not connect to " & $ip)
     Sleep(1000)
     _Close()
 EndIf
 
-$data = "0C 00 51 66 65 47 62 61 FF 0C AC 40 "
+$data = $ip
 
-TCPSend($connect, $data)
+UDPSend($connect, $data)
 
 Sleep(3000)
 _Close()
