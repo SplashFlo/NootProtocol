@@ -30,7 +30,7 @@ $aSocket = UDPOpen($ip, $port)
 
 $connect = UDPSend($asocket, 1002)
 If @error Then
-    ToolTip("could not send Broadcast")
+    ConsoleWrite("could not send Broadcast")
     Sleep(10000)
     _Close()
 EndIf
@@ -39,6 +39,8 @@ $data = $ip
 
 UDPSend($connect, $data)
 UDPBind($EndResultBroadcast, $port)
+
+
 While 1
 	$ServerData = UDPRecv($port, 10, 2)
 Sleep(3000)

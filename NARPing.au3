@@ -21,23 +21,25 @@ UDPStartup()
 ConsoleWrite("Starting UDP Service")
 
 
-$ip = @IPAddress1
+$ip = $EndResultBroadcast
 $port = 2500
 $aSocket = ""
 
-UDPBind($EndResultBroadcast, $port)
+UDPOpen($ip, $port)
 
-While 1
+Do
     $aData = UDPRecv($port, 4, 2)
-		If $aData == 1002 Then
-			ConsoleWrite("Got Data")
+	Until $aData <> ""
+
+
+			ConsoleWrite("Data: " & $aData)
+			Sleep(7000)
 			Global $aClientArray[4] = [$aSocket[0], $aSocket[1], $aData[1], $aData[2]] ;Erstelle ein Array mit den Daten die benötigt werden, um den Client etwas zurück zu senden
 			UDPSend($aClientArray, @IPAddress1 & $port)
 			_Close()
-		Else
-			Sleep(20)
-		EndIf
-WEnd
+			ConsoleWrite("Data: " & $aData)
+			Sleep(7000)
+
 Func _Close()
     UDPShutdown()
 	Exit
