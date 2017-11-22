@@ -41,8 +41,9 @@ func _readParameters()
 	Global $UseSavedConfBinary = ""
 	Global $DoNotUseSavedConf = ""
 	Global $DoNotUseSavedConfBinary = ""
+	Global $connectionsIni = "C:\windows\temp\connections.ini"
 	_startCLI() ;Startet die CLI
-
+	OnAutoItExitRegister("_exit")
 EndFunc
 ;-------------------------------------------------------------------------------------
 ;-------------------------------------------------------------------------------------
@@ -94,7 +95,6 @@ Func _consoleUserView()
 	ConsoleWrite("[UserView] ")
 	$timeOut = True
 
-
 	While $timeOut = True
 
 		Global $read = ""
@@ -127,8 +127,14 @@ Func _mainMenuCommands()
 	Global $exit = StringToBinary("exit")
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
+<<<<<<< HEAD
 	Global $cls = StringToBinary("cls")
 	Global $ftp = StringToBinary("ftp")
+=======
+	Global $clear = StringToBinary("clear")
+	Global $ftp = StringToBinary("ftp")
+	Global $showcon = StringToBinary ("show connections")
+>>>>>>> SplashFlo
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -146,10 +152,10 @@ Func _readConsoleUserView()
 
 	Switch $newReadLine
 		Case $help
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls" & @CRLF & @CRLF)
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear" & @CRLF & @CRLF)
 
 		Case $helpShortCut
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls"& @CRLF & @CRLF)
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear"& @CRLF & @CRLF)
 		Case $exit
 			ConsoleWrite("Exiting..." & @CRLF & @CRLF)
 			_countDown()
@@ -163,7 +169,7 @@ Func _readConsoleUserView()
 
 		Case $blank
 
-		case $cls
+		case $clear
 			_RunDos("cls")
 			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
@@ -388,7 +394,8 @@ Func _server()
 			ConsoleWrite("Got Message: " & $aData[0] & @CRLF)
 			ConsoleWrite("Sending connection built" & @CRLF)
 			UDPSend($aClientArray, 1001)
-
+			IniWrite($connectionsIni, "Connections", $aData[1], $aData[2])
+			ConsoleWrite("ServerView: ")
 		EndIf
 
 		Global $read = ""
@@ -396,37 +403,55 @@ Func _server()
 		Global $newReadLine = StringTrimRight($readRaw, 4)
 		If $newReadLine <> "" Then
 
-		Switch $newReadLine
+			Switch $newReadLine
 
-		Case $exit
+			Case $exit
 				ConsoleWrite("Exiting..." & @CRLF & @CRLF)
-			_countDown()
+				_countDown()
 
-		Case $noot
-				ConsoleWrite(@CRLF & "NOOT" & @CRLF & @CRLF)
+			Case $noot
+					ConsoleWrite(@CRLF & "NOOT" & @CRLF & @CRLF)
 
-		Case $restart
-			ConsoleWrite(@CRLF & "Restarting CLI..." & @CRLF & @CRLF & @CRLF & @CRLF)
-			sleep(1000)
-			_RunDos("cls")
-			_readParameters()
+			Case $restart
+				ConsoleWrite(@CRLF & "Restarting CLI..." & @CRLF & @CRLF & @CRLF & @CRLF)
+				UDPShutdown()
+				sleep(1000)
+				_RunDos("cls")
+				_readParameters()
 
-		Case $blank
+			Case $blank
 
-		Case $help
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls" & @CRLF & @CRLF)
+			Case $help
+				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear,show connections" & @CRLF & @CRLF)
 
-		Case $helpShortCut
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls"& @CRLF & @CRLF)
+			Case $helpShortCut
+				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear, show connections"& @CRLF & @CRLF)
 
-		case $cls
-			_RunDos("cls")
-			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
-			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
-		Case Else
-			ConsoleWrite("Unknown command" & @CRLF)
+			Case $showcon
+				$iniReadConnections = IniReadSection($connectionsIni, "Connections")
+				if @error Then
+					ConsoleWrite("No current connections!" & @CRLF & @CRLF)
+				Else
 
-		EndSwitch
+					ConsoleWrite(@CRLF & "Number of current connections: " & $iniReadConnections[0][0] & @CRLF & @CRLF & "Current connected IPs: " & @CRLF & @CRLF & @CRLF)
+					$i = $iniReadConnections[0][0]
+
+					while $i > 0
+						ConsoleWrite($iniReadConnections[$i][0])
+						$i = $i - 1
+					WEnd
+					ConsoleWrite(@CRLF & @CRLF & @CRLF & "End of list" & @CRLF & @CRLF & @CRLF)
+				EndIf
+
+			case $clear
+				_RunDos("cls")
+				ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
+				ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
+
+			Case Else
+				ConsoleWrite("Unknown command" & @CRLF)
+
+			EndSwitch
 		ConsoleWrite("ServerView: ")
 		EndIf
 		Sleep(20)
@@ -507,3 +532,19 @@ func _getSoundFile()
 	sleep(5000)
 
 EndFunc
+<<<<<<< HEAD
+=======
+
+
+#cs
+
+Simple Exit Funktion für das Script
+
+#ce
+
+func _exit()
+	UDPShutdown
+	FileDelete($connectionsIni)
+	Exit
+EndFunc
+>>>>>>> SplashFlo
