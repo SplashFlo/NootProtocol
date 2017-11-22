@@ -95,7 +95,6 @@ Func _consoleUserView()
 	ConsoleWrite("[UserView] ")
 	$timeOut = True
 
-
 	While $timeOut = True
 
 		Global $read = ""
@@ -128,9 +127,9 @@ Func _mainMenuCommands()
 	Global $exit = StringToBinary("exit")
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
-	Global $cls = StringToBinary("cls")
+	Global $clear = StringToBinary("clear")
 	Global $ftp = StringToBinary("ftp")
-	Global $listconn = StringToBinary ("list connections")
+	Global $showcon = StringToBinary ("show connections")
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -148,10 +147,10 @@ Func _readConsoleUserView()
 
 	Switch $newReadLine
 		Case $help
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls" & @CRLF & @CRLF)
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear" & @CRLF & @CRLF)
 
 		Case $helpShortCut
-			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls"& @CRLF & @CRLF)
+			ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear"& @CRLF & @CRLF)
 		Case $exit
 			ConsoleWrite("Exiting..." & @CRLF & @CRLF)
 			_countDown()
@@ -165,9 +164,8 @@ Func _readConsoleUserView()
 
 		Case $blank
 
-		case $cls
+		case $clear
 			_RunDos("cls")
-			_readParameters()
 			ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 			ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
 		Case Else
@@ -390,6 +388,7 @@ Func _server()
 			ConsoleWrite("Sending connection built" & @CRLF)
 			UDPSend($aClientArray, 1001)
 			IniWrite($connectionsIni, "Connections", $aData[1], $aData[2])
+			ConsoleWrite("ServerView: ")
 		EndIf
 
 		Global $read = ""
@@ -408,6 +407,7 @@ Func _server()
 
 			Case $restart
 				ConsoleWrite(@CRLF & "Restarting CLI..." & @CRLF & @CRLF & @CRLF & @CRLF)
+				UDPShutdown()
 				sleep(1000)
 				_RunDos("cls")
 				_readParameters()
@@ -415,16 +415,28 @@ Func _server()
 			Case $blank
 
 			Case $help
-				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls,list connections" & @CRLF & @CRLF)
+				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear,show connections" & @CRLF & @CRLF)
 
 			Case $helpShortCut
-				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, cls, list connections"& @CRLF & @CRLF)
+				ConsoleWrite("Current Commands: help, ?, noot, exit, restart, clear, show connections"& @CRLF & @CRLF)
 
-			Case $listconn
-					$currentConn = IniReadSection($connectionsIni, "Connections")
-					ConsoleWrite("Current connections: " & $currentConn & @CRLF & @CRLF)
+			Case $showcon
+				$iniReadConnections = IniReadSection($connectionsIni, "Connections")
+				if @error Then
+					ConsoleWrite("No current connections!" & @CRLF & @CRLF)
+				Else
 
-			case $cls
+					ConsoleWrite(@CRLF & "Number of current connections: " & $iniReadConnections[0][0] & @CRLF & @CRLF & "Current connected IPs: " & @CRLF & @CRLF & @CRLF)
+					$i = $iniReadConnections[0][0]
+
+					while $i > 0
+						ConsoleWrite($iniReadConnections[$i][0])
+						$i = $i - 1
+					WEnd
+					ConsoleWrite(@CRLF & @CRLF & @CRLF & "End of list" & @CRLF & @CRLF & @CRLF)
+				EndIf
+
+			case $clear
 				_RunDos("cls")
 				ConsoleWrite("Noot Protocol Copyright Florian Krismer, Stefan Hausberger 2017" & @CRLF & "For help type help or ?" & @CRLF & @CRLF)
 				ConsoleWrite("Current configuration: " & @CRLF & "Ip Address of Server: " & $readIpIni & @CRLF & "Server Port: " & $readServerPort & @CRLF & "Noot Address: " & $readNootIni & @CRLF & @CRLF & @CRLF)
