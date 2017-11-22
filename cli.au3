@@ -127,14 +127,11 @@ Func _mainMenuCommands()
 	Global $exit = StringToBinary("exit")
 	Global $restart = StringToBinary("restart")
 	Global $blank = StringToBinary("")
-<<<<<<< HEAD
 	Global $cls = StringToBinary("cls")
 	Global $ftp = StringToBinary("ftp")
-=======
 	Global $clear = StringToBinary("clear")
 	Global $ftp = StringToBinary("ftp")
 	Global $showcon = StringToBinary ("show connections")
->>>>>>> SplashFlo
 
 EndFunc   ;==>_mainMenuCommands
 
@@ -532,9 +529,6 @@ func _getSoundFile()
 	sleep(5000)
 
 EndFunc
-<<<<<<< HEAD
-=======
-
 
 #cs
 
@@ -547,4 +541,3 @@ func _exit()
 	FileDelete($connectionsIni)
 	Exit
 EndFunc
->>>>>>> SplashFlo
